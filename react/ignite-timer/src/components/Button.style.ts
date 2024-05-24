@@ -1,5 +1,5 @@
 import styled from "styled-components";
-export type ButtonVariants = 'primary' | 'secondary' | 'danger' | 'success'
+export type ButtonVariants = 'primary'| 'green' | 'secondary' | 'danger' | 'success'
 
 type ButtonContainerProps = {
   variant: ButtonVariants

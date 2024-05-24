@@ -5,7 +5,7 @@ type ButtonProps = {
 }
 
 export const Button = ({
-  variant = 'primary'
+  variant = 'green'
 }: ButtonProps) => {
   return (
     <ButtonContainer
