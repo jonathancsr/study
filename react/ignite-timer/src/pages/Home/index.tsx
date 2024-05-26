@@ -3,7 +3,8 @@ import { Play } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
-import { useState } from "react";
+import { differenceInSeconds } from "date-fns";
+import { useEffect, useState } from "react";
 import {
   CountdownContainer,
   FormContainer,
@@ -25,6 +26,7 @@ type Cycle = {
   id: string;
   task: string;
   minutesAmount: number;
+  startDate: Date;
 };
 
 export default function Home() {
@@ -45,6 +47,7 @@ export default function Home() {
       id: String(new Date().getTime()),
       task: data.task,
       minutesAmount: data.minutesAmount,
+      startDate: new Date(),
     };
 
     setCycles((state) => [...state, newCycle]);
@@ -65,6 +68,16 @@ export default function Home() {
 
   const minutes = String(minutesAmount).padStart(2, "0");
   const seconds = String(secondsAmount).padStart(2, "0");
+
+  useEffect(() => {
+    if (activeCycle) {
+      setInterval(() => {
+        setAmountSecondsPassed(
+          differenceInSeconds(new Date(), activeCycle.startDate)
+        );
+      }, 1000);
+    }
+  }, [activeCycle]);
 
   return (
     <HomeContainer>
