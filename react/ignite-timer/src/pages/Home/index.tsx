@@ -18,7 +18,7 @@ import {
 
 const newCycleFormValidationSchema = z.object({
   task: z.string().min(1, "Insert the task name"),
-  minutesAmount: z.number().min(5),
+  minutesAmount: z.number().min(1),
 });
 
 type NewCycleFormData = z.infer<typeof newCycleFormValidationSchema>;
@@ -29,6 +29,7 @@ type Cycle = {
   minutesAmount: number;
   startDate: Date;
   interruptedDate?: Date;
+  finishedDate?: Date;
 };
 
 export default function Home() {
@@ -62,8 +63,8 @@ export default function Home() {
   function handleInterruptCycle() {
     setActiveCycleId(null);
 
-    setCycles(
-      cycles.map((cycle) => {
+    setCycles((state) =>
+      state.map((cycle) => {
         if (cycle.id === activeCycleId) {
           return { ...cycle, interruptedDate: new Date() };
         } else {
@@ -90,9 +91,27 @@ export default function Home() {
     let interval: number;
     if (activeCycle) {
       interval = setInterval(() => {
-        setAmountSecondsPassed(
-          differenceInSeconds(new Date(), activeCycle.startDate)
+        const secondsDifference = differenceInSeconds(
+          new Date(),
+          activeCycle.startDate
         );
+
+        if (secondsDifference >= totalSeconds) {
+          setCycles((state) =>
+            state.map((cycle) => {
+              if (cycle.id === activeCycleId) {
+                return { ...cycle, finishedDate: new Date() };
+              } else {
+                return cycle;
+              }
+            })
+          );
+          setAmountSecondsPassed(totalSeconds);
+          clearInterval(interval);
+          setActiveCycleId(null);
+        } else {
+          setAmountSecondsPassed(secondsDifference);
+        }
       }, 1000);
     }
     return () => {
@@ -124,7 +143,7 @@ export default function Home() {
             type="number"
             id="minutesAmount"
             placeholder="00"
-            step={5}
+            step={0}
             min={0}
             disabled={!!activeCycle}
             {...register("minutesAmount", { valueAsNumber: true })}
