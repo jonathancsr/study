@@ -84,6 +84,12 @@ export default function Home() {
     };
   }, [activeCycle]);
 
+  useEffect(() => {
+    if (activeCycle) {
+      document.title = `${minutes}:${seconds} - ${activeCycle.task}`;
+    }
+  }, [minutes, seconds, activeCycle]);
+
   return (
     <HomeContainer>
       <form onSubmit={handleSubmit(handleCreateNewCycle)} action="">
