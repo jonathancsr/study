@@ -15,6 +15,20 @@ export const HomeContainer = styled.main`
   }
 `;
 
+export const CurrentTaskText = styled.div`
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+
+  color: ${(props) => props.theme["gray-100"]};
+  font-size: 1.125rem;
+  font-weight: normal;
+`;
+
 export const BaseCountdownButton = styled.button`
   width: 100%;
   border: 0;

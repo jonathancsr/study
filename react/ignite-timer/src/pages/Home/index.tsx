@@ -7,6 +7,7 @@ import { useCyclesContext } from "../../contexts/CyclesContext";
 import { Countdown } from "./components/Countdown";
 import { NewCycleForm } from "./components/NewCycleForm";
 import {
+  CurrentTaskText,
   HomeContainer,
   StartCountdownButton,
   StopCountdownButton,
@@ -44,9 +45,15 @@ export default function Home() {
   return (
     <HomeContainer>
       <form onSubmit={handleSubmit(handleCreateNewCycle)} action="">
-        <FormProvider {...newCycleForm}>
-          <NewCycleForm />
-        </FormProvider>
+        {!!activeCycle ? (
+          <CurrentTaskText>
+            Work on <b>{activeCycle.task}</b>
+          </CurrentTaskText>
+        ) : (
+          <FormProvider {...newCycleForm}>
+            <NewCycleForm />
+          </FormProvider>
+        )}
         <Countdown />
         {activeCycle ? (
           <StopCountdownButton onClick={interruptCurrentCycle} type="button">
