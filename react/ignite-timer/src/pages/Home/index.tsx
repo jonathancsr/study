@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Play } from "phosphor-react";
+import { HandPalm, Play } from "phosphor-react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 
@@ -12,6 +12,7 @@ import {
   MinutesAmountInput,
   Separator,
   StartCountdownButton,
+  StopCountdownButton,
   TaskInput,
 } from "./styles";
 
@@ -27,6 +28,7 @@ type Cycle = {
   task: string;
   minutesAmount: number;
   startDate: Date;
+  interruptedDate?: Date;
 };
 
 export default function Home() {
@@ -55,6 +57,20 @@ export default function Home() {
     setAmountSecondsPassed(0);
 
     reset();
+  }
+
+  function handleInterruptCycle() {
+    setActiveCycleId(null);
+
+    setCycles(
+      cycles.map((cycle) => {
+        if (cycle.id === activeCycleId) {
+          return { ...cycle, interruptedDate: new Date() };
+        } else {
+          return cycle;
+        }
+      })
+    );
   }
 
   const task = watch("task");
@@ -99,6 +115,7 @@ export default function Home() {
             id="task"
             type="text"
             placeholder="Give a name for you work"
+            disabled={!!activeCycle}
             {...register("task")}
           />
 
@@ -109,6 +126,7 @@ export default function Home() {
             placeholder="00"
             step={5}
             min={0}
+            disabled={!!activeCycle}
             {...register("minutesAmount", { valueAsNumber: true })}
           />
           <label htmlFor="">minutes.</label>
@@ -121,9 +139,15 @@ export default function Home() {
           <span>{seconds[0]}</span>
           <span>{seconds[1]}</span>
         </CountdownContainer>
-        <StartCountdownButton disabled={isSubmitDisabled} type="submit">
-          <Play size={24} /> Start
-        </StartCountdownButton>
+        {activeCycle ? (
+          <StopCountdownButton onClick={handleInterruptCycle} type="button">
+            <HandPalm size={24} /> Stop
+          </StopCountdownButton>
+        ) : (
+          <StartCountdownButton disabled={isSubmitDisabled} type="submit">
+            <Play size={24} /> Start
+          </StartCountdownButton>
+        )}
       </form>
     </HomeContainer>
   );
