@@ -28,8 +28,8 @@ export function Countdown() {
           new Date(),
           new Date(activeCycle.startDate),
         )
-
         if (secondsDifference >= totalSeconds) {
+          console.log(secondsDifference, totalSeconds)
           markCurrentCycleAsFinished()
           setSecondsPassed(totalSeconds)
           clearInterval(interval)

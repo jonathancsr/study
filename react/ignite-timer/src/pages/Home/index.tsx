@@ -1,51 +1,51 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { HandPalm, Play } from "phosphor-react";
-import { FormProvider, useForm } from "react-hook-form";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod'
+import { HandPalm, Play } from 'phosphor-react'
+import { FormProvider, useForm } from 'react-hook-form'
+import * as z from 'zod'
 
-import { useCyclesContext } from "../../contexts/CyclesContext";
-import { Countdown } from "./components/Countdown";
-import { NewCycleForm } from "./components/NewCycleForm";
+import { useCyclesContext } from '../../contexts/CyclesContext'
+import { Countdown } from './components/Countdown'
+import { NewCycleForm } from './components/NewCycleForm'
 import {
   CurrentTaskText,
   HomeContainer,
   StartCountdownButton,
   StopCountdownButton,
-} from "./styles";
+} from './styles'
 
 const newCycleFormValidationSchema = z.object({
-  task: z.string().min(1, "Insert the task name"),
+  task: z.string().min(1, 'Insert the task name'),
   minutesAmount: z.number().min(1),
-});
+})
 
-type NewCycleFormData = z.infer<typeof newCycleFormValidationSchema>;
+type NewCycleFormData = z.infer<typeof newCycleFormValidationSchema>
 
 export default function Home() {
   const { activeCycle, createNewCycle, interruptCurrentCycle } =
-    useCyclesContext();
+    useCyclesContext()
 
   const newCycleForm = useForm<NewCycleFormData>({
     resolver: zodResolver(newCycleFormValidationSchema),
     defaultValues: {
-      task: "",
+      task: '',
       minutesAmount: 0,
     },
-  });
+  })
 
-  const { handleSubmit, watch, reset } = newCycleForm;
+  const { handleSubmit, watch, reset } = newCycleForm
 
-  const task = watch("task");
-  const isSubmitDisabled = !task;
+  const task = watch('task')
+  const isSubmitDisabled = !task
 
   function handleCreateNewCycle(data: NewCycleFormData) {
-    createNewCycle(data);
-    reset();
+    createNewCycle(data)
+    reset()
   }
 
   return (
     <HomeContainer>
       <form onSubmit={handleSubmit(handleCreateNewCycle)} action="">
-        {!!activeCycle ? (
+        {activeCycle ? (
           <CurrentTaskText>
             Work on <b>{activeCycle.task}</b>
           </CurrentTaskText>
@@ -66,5 +66,5 @@ export default function Home() {
         )}
       </form>
     </HomeContainer>
-  );
+  )
 }
