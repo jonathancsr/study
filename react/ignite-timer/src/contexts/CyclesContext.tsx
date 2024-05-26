@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { Cycle } from "../@types/global";
 type CreateCycleData = {
   task: string;
@@ -23,14 +23,22 @@ export function CyclesContextProvider({
 }: {
   children: React.ReactElement;
 }) {
-  const [cycles, setCycles] = useState<Cycle[]>([]);
+  const [cycles, setCycles] = useState<Cycle[]>(() => {
+    const savedCycles = localStorage.getItem("cycles");
+    if (savedCycles) {
+      return JSON.parse(savedCycles);
+    }
+    return [];
+  });
   const [activeCycleId, setActiveCycleId] = useState<string | null>(null);
   const [amountSecondsPassed, setAmountSecondsPassed] = useState<number>(0);
 
   const activeCycle = cycles.find((c) => c.id === activeCycleId);
+
   function setSecondsPassed(seconds: number) {
     setAmountSecondsPassed(seconds);
   }
+
   function markCurrentCycleAsFinished() {
     setCycles((state) =>
       state.map((cycle) => {
@@ -41,6 +49,8 @@ export function CyclesContextProvider({
         }
       })
     );
+
+    setActiveCycleId(null);
   }
 
   function createNewCycle(data: CreateCycleData) {
@@ -69,6 +79,10 @@ export function CyclesContextProvider({
       })
     );
   }
+
+  useEffect(() => {
+    localStorage.setItem("cycles", JSON.stringify(cycles));
+  }, [cycles]);
 
   return (
     <CyclesContext.Provider
