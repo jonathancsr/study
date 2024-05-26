@@ -1,6 +1,10 @@
+import { formatDistanceToNow } from "date-fns";
+import { useCyclesContext } from "../../contexts/CyclesContext";
 import { HistoryContainer, HistoryList, Status } from "./styles";
 
 export default function History() {
+  const { cycles } = useCyclesContext();
+
   return (
     <HistoryContainer>
       <h1>My History</h1>
@@ -15,38 +19,24 @@ export default function History() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Teste</td>
-              <td>20 minutes</td>
-              <td>Há 2 dias</td>
-              <td>
-                <Status status="green">Done</Status>
-              </td>
-            </tr>
-            <tr>
-              <td>Teste</td>
-              <td>20 minutes</td>
-              <td>Há 2 dias</td>
-              <td>
-                <Status status="red">Suspended</Status>
-              </td>
-            </tr>
-            <tr>
-              <td>Teste</td>
-              <td>20 minutes</td>
-              <td>Há 2 dias</td>
-              <td>
-                <Status status="yellow">In Progress</Status>
-              </td>
-            </tr>
-            <tr>
-              <td>Teste</td>
-              <td>20 minutes</td>
-              <td>Há 2 dias</td>
-              <td>
-                <Status status="yellow">In Progress</Status>
-              </td>
-            </tr>
+            {cycles.map((cycle) => (
+              <tr key={cycle.id}>
+                <td>{cycle.task}</td>
+                <td>{cycle.minutesAmount} minutes</td>
+                <td>
+                  {formatDistanceToNow(cycle.startDate, { addSuffix: true })}
+                </td>
+                <td>
+                  {cycle.finishedDate && <Status status="green">Done</Status>}
+                  {cycle.interruptedDate && (
+                    <Status status="red">Interrupted</Status>
+                  )}
+                  {!cycle.finishedDate && !cycle.interruptedDate && (
+                    <Status status="yellow">In progress</Status>
+                  )}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </HistoryList>
