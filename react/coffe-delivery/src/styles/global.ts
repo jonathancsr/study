@@ -13,7 +13,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    background-color: ${({ theme }) => theme['gray-900']};
+    background-color: ${({ theme }) => theme['gray-100']};
     color: ${({ theme }) => theme.white};
     -webkit-font-smoothing: antialiased;
   }
