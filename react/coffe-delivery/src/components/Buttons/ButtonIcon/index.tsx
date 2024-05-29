@@ -1,12 +1,17 @@
 import { ButtonHTMLAttributes } from 'react'
-import { ButtonContainer } from './styles'
+import { ButtonContainer, VariantTypes } from './styles'
 
 type ButtonIconProps = {
   icon: React.ReactNode
+  variant?: VariantTypes
 } & ButtonHTMLAttributes<HTMLButtonElement>
-export function ButtonIcon({ icon, onClick, ...props }: ButtonIconProps) {
+export function ButtonIcon({
+  icon,
+  variant = 'purple',
+  ...props
+}: ButtonIconProps) {
   return (
-    <ButtonContainer onClick={onClick} {...props}>
+    <ButtonContainer variant={variant} {...props}>
       {icon}
     </ButtonContainer>
   )
